@@ -23,6 +23,10 @@ const intervalId = setInterval(() => {
           }
           window.printCookie = (name) => {
             const value = getCookie(name);
+            if (!value) {
+              console.log('No cookie named: ' + name);
+              return;
+            }
             console.log(
               JSON.stringify(JSON.parse(decodeURIComponent(value)), null, 2)
             );
@@ -40,6 +44,24 @@ const intervalId = setInterval(() => {
               window.printAllCookies();
             });
           };
+          window.getCustomerPrivacyStatus = () => {
+            const prefs = window.Shopify.customerPrivacy.getShopPrefs();
+            if (prefs && prefs.limit) {
+              console.log('Shop preferences: ' + prefs.limit.join(', '));
+            }
+            console.log('Merchant Granular Consent: ' + window.Shopify.customerPrivacy.doesMerchantSupportGranularConsent());
+            const regulation = window.Shopify.customerPrivacy.getRegulation();
+            console.log('Regulation: ' + regulation);
+            console.log('Regulation enforced: ' + window.Shopify.customerPrivacy.isRegulationEnforced());
+            console.log('------------------------------------------------------');
+            console.log('GDPR consent: ' + window.Shopify.customerPrivacy.getTrackingConsent());
+            console.log('CCPA consent: ' + window.Shopify.customerPrivacy.getCCPAConsent());
+            console.log('User can be tracked: ' + window.Shopify.customerPrivacy.userCanBeTracked());
+            console.log('User data can be sold: ' + window.Shopify.customerPrivacy.userDataCanBeSold());
+            console.log('------------------------------------------------------');
+            console.log('Should show GDPR Banner: ' + window.Shopify.customerPrivacy.shouldShowGDPRBanner());
+            console.log('Should show CCPA Banner: ' + window.Shopify.customerPrivacy.shouldShowCCPABanner());
+          }
         }
       );
     }
